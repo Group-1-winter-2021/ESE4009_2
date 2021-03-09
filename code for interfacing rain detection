@@ -1,0 +1,25 @@
+include<iobb.h> // library  for accesing the gpio pins
+#include<stdio.h>  // standard input output library
+ 
+int main()
+{
+
+iolib_init(); // initializes the  iobb library
+iolib_setdir(8,11,DigitalIn); // here setting the directory for p8 header 11 pin as digital input pin
+while (1)  //infinite loop 
+{
+if(is_high(8,11)) // if the status of the pin is high it will enter into the loop
+{
+printf("water not  detected \n"); //prints water not detected
+iolib_delay_ms(500); //introduces a delay of 500 ms
+}
+if(is_low(8,11)) //if the status of the pin is low it will enter into this loop
+{
+printf("water   detected \n"); // prints water detected
+iolib_delay_ms(500); //gives delay of 500 ms
+}
+}
+iolib_free(); //frees all the gpio pins 
+return(0);// if program runs succesfully
+}
+
