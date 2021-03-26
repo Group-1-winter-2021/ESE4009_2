@@ -1,0 +1,49 @@
+#include <GSMSimSMS.h> //Import GSM Library
+#include <SoftwareSerial.h> //Import Software Serial Library
+
+
+SoftwareSerial SIM900(2, 3);// Configure Software Serial at Pin 2 & 3
+GSMSimSMS gsm(SIM900); //Initialize GSM Library on Software Serial Port on name "gsm"
+
+char *number = "+16476094973"; //Contact Number to Send SMS to
+char *message = "Temperature is too cold. stay warm."; //Message to be Send in SMS
+
+void setup() {
+  
+  SIM900.begin(9600); // Initialize Serial Communication from GSM Module at 9600 Baudrate
+  Serial.begin(9600); // Initialize Serial Communication from Arduino at 9600 Baudrate
+
+  Serial.println("Initializing GSM Module");
+  delay(10000);
+  gsm.init(); //Initialize the GSM Module
+
+  Serial.println("Enabling Phone Function of GSM Module");
+  gsm.setPhoneFunc(1);//Enabling Phone Function of GSM Module
+  delay(1000); //Small Delay to Apply Changes
+
+  Serial.println("Enabling SMS Function of GSM Module");
+  gsm.initSMS(); //Enabling SMS Function of GSM Module
+  delay(1000); //Small Delay to Apply Changes
+
+  Serial.println("Ready");
+  delay(2000);
+  
+  
+}
+
+void loop() {
+  
+ Serial.print("Sending SMS to ");
+  Serial.println(number); //Message for User
+  
+  int response = gsm.send(number, message);//Function to Send SMS
+  //Store response of function in 'response'
+  if (response == 1)// If Response is 1
+  {
+    Serial.println("SMS Sent");
+  }
+
+delay(90000); // Delay between SMS Sending
+
+
+}
