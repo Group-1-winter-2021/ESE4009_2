@@ -1,0 +1,50 @@
+#include <stdio.h> // IO library
+#include <unistd.h> // For using sleep function
+#include <stdlib.h> //Using system function
+#include <string.h> // For using String Functions
+#include<iobb.h> // library for accessing the gpio pins
+int rain;
+int main()  
+{  
+	iolib_init(); // initializes the  iobb library
+	iolib_setdir(8,11,DigitalIn); // here setting the directory for p8 header 11 pin as digital input pin
+	//Pin 11 of Port 8 is where the Rain Sensor should be connected
+
+	while(1)
+	{
+	
+	
+		if(is_high(8,11)) // if the status of the pin is high it will enter into the loop
+		{
+			printf("water not  detected \n"); //prints water not detected
+			rain = 0;
+		}
+		if(is_low(8,11)) //if the status of the pin is low it will enter into this loop
+		{
+			printf("water   detected \n"); // prints water detected
+			rain = 1;
+		}
+		
+		//Sample Link to Upload data '0' on Thingspeak Channel at Field 1
+		//https://api.thingspeak.com/update?api_key=SRIJY2N24PGDSE2W&field1=0
+
+		//The Sample Link
+		char command[] = "curl \"https://api.thingspeak.com/update.json?api_key=SRIJY2N24PGDSE2W&field1=";
+		char string[5];
+		//Adding the sensor data at the end of the link
+		sprintf(string, "%d", rain); // Convert number to char array
+		strcat(command,string); // Format BAse url to add new letter count
+		strcat(command,"\"");// Add termination
+		system(command); // Ping the Web link using Command line
+		
+	    printf("\nData Uploaded to Thingspeak \n"); // Print done
+	    sleep(15);// Wait for 15 seconds, as Thingspeak can accept dat once only 15 seconds
+	}
+	
+  	return(0);  
+  
+  
+}  
+
+
+
